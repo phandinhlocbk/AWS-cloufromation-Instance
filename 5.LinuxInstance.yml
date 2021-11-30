@@ -1,0 +1,56 @@
+Description: 
+this is deploy a vpc and 2 subnet
+Parameters:
+  PublicSubnet1:
+    Description: Specify Subnet Id for instance 1
+    Type: AWS::EC2::Subnet::Id
+  PublicSubnet2:
+    Description: Specify Subnet Id for instance 2
+    Type: AWS::EC2::Subnet::Id
+  EC2InstanceSg:
+    Description: Specify the security group which attached to the instance
+    Type: AWS::EC2::SecurityGroup::Id
+ 
+
+Resources:
+# Instance
+  EC2Instance1:
+    Type: AWS::EC2::Instance
+    Properties:
+      AvailabilityZone: !Ref PublicSubnet1
+      ImageId: ##
+      InstanceType: t2.micro
+      SecurityGroups:
+        - !Ref EC2InstanceSg
+      Tag:
+        - Key: Name
+          Value: Devops
+      UserData: 
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          yum update -y
+          yum install -y httpd
+          systemctl start httpd
+          systemctl enable httpd
+          #echo "<h1>Hello from Region us-east-1a</h1>" > /var/www/html/index.html
+      
+
+  EC2Instance2:
+    Type: AWS::EC2::Instance
+    Properties:
+      AvailabilityZone: !Ref PublicSubnet2
+      ImageId: ##
+      InstanceType: t2.micro
+      SecurityGroups:
+        - !Ref EC2InstanceSg
+      Tag:
+        - Key: Name
+          Value: Devops
+      UserData: 
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          yum update -y
+          yum install -y httpd
+          systemctl start httpd
+          systemctl enable httpd
+          #echo "<h1>Hello from Region us-east-1b</h1>" > /var/www/html/index.html  

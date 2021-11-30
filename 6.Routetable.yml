@@ -1,0 +1,77 @@
+Parameters:
+  VPC:
+    Description: Specify VPC Id for Route table
+    Type: AWS::EC2::VPC::Id 
+  IGW:
+    Description: Specify IGW for Route table
+    Type: AWS::EC2::InternetGateway::Id 
+  PublicSubnet1:
+    Description: Specify PublicSubnet1 for Route table
+    Type: AWS::EC2::Subnet::Id
+  PublicSubnet2:
+    Description: Specify PublicSubnet2 for Route table
+    Type: AWS::EC2::Subnet::Id
+  PrivateSubnet1:
+    Description: Specify PublicSubnet1 for Route table
+    Type: AWS::EC2::Subnet::Id
+  PrivateSubnet2:
+    Description: Specify PublicSubnet2 for Route table
+    Type: AWS::EC2::Subnet::Id
+
+  
+
+Resources:
+# Public Subnet
+# Route table
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: Public Route Table
+
+  DefaultPublicRoute:
+    Type: AWS::EC2::Route
+    DependsOn: InternetGatewayAttachment
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref IGW
+  
+# Association routetable
+  PublicSubnet1RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      SubnetId: !Ref PublicSubnet1
+  
+  PublicSubnet2RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      SubnetId: !Ref PublicSubnet2
+# Private Subnet
+# Routetable 
+  PrivateRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+      - Key: Name
+        Value: Private Route Table
+
+# Association routetable
+  PrivateSubnetRouteTableAssociation1:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateSubnet1
+      RouteTableId: !Ref PrivateRouteTable
+
+  PrivateSubnetRouteTableAssociation2:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateSubnet2
+      RouteTableId: !Ref PrivateRouteTable
+
+    

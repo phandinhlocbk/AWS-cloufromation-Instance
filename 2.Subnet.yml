@@ -1,0 +1,70 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  EnvironmentName:
+    Description: An environment name that is prefixed to resource names tag name
+    Type: String
+  VPC:
+    Description: VPC CIDR Ip for Subnet
+    Type: AWS::EC2::VPC::Id
+  PublicSubnet1CIDR:
+    Description: Public Subnet 1
+    Type: String
+    Default: 10.0.1.0/24
+  PublicSubnet2CIDR:
+    Description: Public Subnet 2 
+    Type: String
+    Default: 10.0.3.0/24
+  PrivateSubnet1CIDR:
+    Description: Private Subnet 1 
+    Type: String
+    Default: 10.0.2.0/24
+  PrivateSubnet2CIDR:
+    Description: Private Subnet 2
+    Type: String
+    Default: 10.0.4.0/24
+  
+
+Resources:
+  PublicSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: !Ref PublicSubnet1CIDR
+      AvailabilityZone: "us-east-1a" 
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: !Ref EnvironmentName
+
+  PublicSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: !Ref PublicSubnet2CIDR
+      AvailabilityZone: "us-east-1b" 
+      MapPublicIpOnLaunch: true #recive public ip
+      Tags:
+        - Key: Name
+          Value: !Ref EnvironmentName
+
+  PrivateSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: !Ref PrivateSubnet1CIDR
+      AvailabilityZone: "us-east-1a" 
+      MapPublicIpOnLaunch: false #no recive public ip
+      Tags:
+        - Key: Name
+          Value: !Ref EnvironmentName  
+
+  PrivateSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: !Ref PrivateSubnet2CIDR
+      AvailabilityZone: "us-east-1b" 
+      MapPublicIpOnLaunch: false #no recive public ip
+      Tags:
+        - Key: Name
+          Value: !Ref EnvironmentName 
