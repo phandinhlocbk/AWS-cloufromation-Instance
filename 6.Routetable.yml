@@ -2,9 +2,6 @@ Parameters:
   VPC:
     Description: Specify VPC Id for Route table
     Type: AWS::EC2::VPC::Id 
-  IGW:
-    Description: Specify IGW for Route table
-    Type: AWS::EC2::InternetGateway::Id 
   PublicSubnet1:
     Description: Specify PublicSubnet1 for Route table
     Type: AWS::EC2::Subnet::Id
@@ -21,6 +18,19 @@ Parameters:
   
 
 Resources:
+InternetGateway: 
+    Type: AWS::EC2::InternetGateway
+    Properties: 
+      Tags: 
+        - Key: Name
+          Value: !Ref EnvironmentName
+
+  InternetGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties: 
+      InternetGatewayId: !Ref InternetGateway
+      VpcId: !Ref VPC
+
 # Public Subnet
 # Route table
   PublicRouteTable:
